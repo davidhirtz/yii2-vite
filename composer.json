@@ -1,0 +1,28 @@
+{
+  "name": "davidhirtz/yii2-vite",
+  "description": "Vite integration for Yii 2 framework",
+  "license": "proprietary",
+  "type": "yii2-extension",
+  "homepage": "https://www.github.com/davidhirtz/yii2-vite",
+  "authors": [
+    {
+      "name": "David Hirtz",
+      "homepage": "https://www.davidhirtz.com/"
+    }
+  ],
+  "require": {
+    "guzzlehttp/guzzle": "^7.0",
+    "yiisoft/yii2": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "davidhirtz\\yii2\\vite\\": "src"
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ]
+}
