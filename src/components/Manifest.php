@@ -39,7 +39,7 @@ class Manifest
         }
 
         $tags = [
-            $data['file'] => [
+            $path => [
                 'type' => self::TYPE_JS,
                 'url' => $data['file'],
                 'options' => [

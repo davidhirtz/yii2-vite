@@ -2,6 +2,7 @@
 
 namespace davidhirtz\yii2\vite\components;
 
+use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use Yii;
@@ -83,25 +84,71 @@ class Vite extends Component
     ): void
     {
         $tags = $this->getManifest()->getTagsForPath($path, $asyncCss, $cssOptions, $jsOptions);
+        $this->registerTagsFromManifest($tags);
+    }
+
+    public function getScriptUrl(
+        string $path,
+        bool $asyncCss = true,
+        array $cssOptions = [],
+        array $jsOptions = [],
+    ): string
+    {
+        $path = ltrim($path, '/');
+
+        if ($this->isDevServerRunning()) {
+            return $this->getScriptUrlFromDevServer($path);
+        }
+
+        return $this->getScriptUrlFromManifest($path, $asyncCss, $cssOptions, $jsOptions);
+    }
+
+    public function getScriptUrlFromDevServer(string $path): string
+    {
+        return rtrim($this->devBaseUrl, '/') . "/$path";
+    }
+
+    public function getScriptUrlFromManifest(
+        string $path,
+        bool $asyncCss = true,
+        array $cssOptions = [],
+        array $jsOptions = [],
+    ): string
+    {
+        $tags = $this->getManifest()->getTagsForPath($path, $asyncCss, $cssOptions, $jsOptions);
+        $script = ArrayHelper::remove($tags, $path);
+
+        $this->registerTagsFromManifest($tags);
+
+        return $this->formatManifestUrl($script['url']);
+    }
+
+    protected function registerTagsFromManifest(array $tags): void
+    {
         $view = Yii::$app->getView();
 
-        foreach ($tags as $tag) {
-            $url = rtrim($this->baseUrl, '/') . "/{$tag['url']}";
+        foreach ($tags as $key => $tag) {
+            $url = $this->formatManifestUrl($tag['url']);
 
             switch ($tag['type']) {
                 case Manifest::TYPE_JS:
-                    $view->registerJsFile($url, $tag['options']);
+                    $view->registerJsFile($url, $tag['options'], $key);
                     break;
 
                 case Manifest::TYPE_CSS:
-                    $view->registerCssFile($url, $tag['options']);
+                    $view->registerCssFile($url, $tag['options'], $key);
                     break;
 
                 case Manifest::TYPE_LINK:
-                    $view->registerLinkTag($tag['options']);
+                    $view->registerLinkTag($tag['options'], $key);
                     break;
             }
         }
+    }
+
+    protected function formatManifestUrl(string $url): string
+    {
+        return rtrim($this->baseUrl, '/') . "/$url";
     }
 
     public function getManifest(): Manifest
