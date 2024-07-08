@@ -4,6 +4,7 @@ namespace davidhirtz\yii2\vite\components;
 
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\helpers\ArrayHelper;
 
 class Manifest
 {
@@ -25,12 +26,7 @@ class Manifest
         return json_decode(file_get_contents($this->path), true);
     }
 
-    public function getTagsForPath(
-        string $path,
-        bool $asyncCss = true,
-        array $cssOptions = [],
-        array $jsOptions = [],
-    ): array
+    public function getTagsForPath(string $path, array $cssOptions = [], array $jsOptions = []): array
     {
         $data = $this->data[$path] ?? [];
 
@@ -66,6 +62,8 @@ class Manifest
                 ],
             ];
         }
+
+        $asyncCss = ArrayHelper::remove($cssOptions, 'async', false);
 
         if ($asyncCss) {
             $cssOptions['media'] ??= 'print';

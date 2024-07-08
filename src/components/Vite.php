@@ -2,11 +2,11 @@
 
 namespace davidhirtz\yii2\vite\components;
 
-use davidhirtz\yii2\skeleton\helpers\ArrayHelper;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use Yii;
 use yii\base\Component;
+use yii\helpers\ArrayHelper;
 
 class Vite extends Component
 {
@@ -51,12 +51,7 @@ class Vite extends Component
         parent::init();
     }
 
-    public function register(
-        string $path,
-        bool $asyncCss = true,
-        array $cssOptions = [],
-        array $jsOptions = [],
-    ): void
+    public function register(string $path, array $cssOptions = [], array $jsOptions = []): void
     {
         $path = ltrim($path, '/');
 
@@ -65,7 +60,7 @@ class Vite extends Component
             return;
         }
 
-        $this->registerFromManifest($path, $asyncCss, $cssOptions, $jsOptions);
+        $this->registerFromManifest($path, $cssOptions, $jsOptions);
     }
 
     public function registerFromDevServer(string $path, array $options = []): void
@@ -76,23 +71,13 @@ class Vite extends Component
         Yii::$app->getView()->registerJsFile($url, $options, $path);
     }
 
-    public function registerFromManifest(
-        string $path,
-        bool $asyncCss = true,
-        array $cssOptions = [],
-        array $jsOptions = [],
-    ): void
+    public function registerFromManifest(string $path, array $cssOptions = [], array $jsOptions = []): void
     {
-        $tags = $this->getManifest()->getTagsForPath($path, $asyncCss, $cssOptions, $jsOptions);
+        $tags = $this->getManifest()->getTagsForPath($path, $cssOptions, $jsOptions);
         $this->registerTagsFromManifest($tags);
     }
 
-    public function getScriptUrl(
-        string $path,
-        bool $asyncCss = true,
-        array $cssOptions = [],
-        array $jsOptions = [],
-    ): string
+    public function getScriptUrl(string $path, array $cssOptions = [], array $jsOptions = []): string
     {
         $path = ltrim($path, '/');
 
@@ -100,7 +85,7 @@ class Vite extends Component
             return $this->getScriptUrlFromDevServer($path);
         }
 
-        return $this->getScriptUrlFromManifest($path, $asyncCss, $cssOptions, $jsOptions);
+        return $this->getScriptUrlFromManifest($path, $cssOptions, $jsOptions);
     }
 
     public function getScriptUrlFromDevServer(string $path): string
@@ -108,14 +93,9 @@ class Vite extends Component
         return rtrim($this->devBaseUrl, '/') . "/$path";
     }
 
-    public function getScriptUrlFromManifest(
-        string $path,
-        bool $asyncCss = true,
-        array $cssOptions = [],
-        array $jsOptions = [],
-    ): string
+    public function getScriptUrlFromManifest(string $path, array $cssOptions = [], array $jsOptions = []): string
     {
-        $tags = $this->getManifest()->getTagsForPath($path, $asyncCss, $cssOptions, $jsOptions);
+        $tags = $this->getManifest()->getTagsForPath($path, $cssOptions, $jsOptions);
         $script = ArrayHelper::remove($tags, $path);
 
         $this->registerTagsFromManifest($tags);
