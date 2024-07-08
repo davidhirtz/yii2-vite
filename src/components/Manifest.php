@@ -8,9 +8,9 @@ use yii\helpers\ArrayHelper;
 
 class Manifest
 {
-    final const TYPE_JS = 'js';
-    final const TYPE_CSS = 'css';
-    final const TYPE_LINK = 'link';
+    final public const TYPE_JS = 'js';
+    final public const TYPE_CSS = 'css';
+    final public const TYPE_LINK = 'link';
 
     public readonly array $data;
     public readonly string $path;
