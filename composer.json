@@ -38,7 +38,6 @@
   "scripts": {
     "check-cs": "ecs check --ansi",
     "fix-cs": "ecs check --ansi --fix",
-    "phpstan": "phpstan --memory-limit=1G",
     "rector": "rector"
   }
 }
