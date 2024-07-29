@@ -120,6 +120,7 @@ class Vite extends Component
                     break;
 
                 case Manifest::TYPE_LINK:
+                    $tag['options']['href'] = $url;
                     $view->registerLinkTag($tag['options'], $key);
                     break;
             }

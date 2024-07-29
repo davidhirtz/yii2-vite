@@ -53,10 +53,10 @@ class Manifest
         foreach ($importFiles as $key => $file) {
             $tags[$file] = [
                 'type' => self::TYPE_LINK,
+                'url' => $file,
                 'options' => [
-                    'href' => $file,
                     'crossorigin' => true,
-                    'integrity' => $this->data[$key]['integrity'] ?? '',
+                    'integrity' => $this->data[$key]['integrity'] ?? null,
                     'rel' => 'modulepreload',
                     ...$jsOptions,
                 ],

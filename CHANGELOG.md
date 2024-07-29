@@ -1,3 +1,7 @@
+## 0.4.0 (Jul 29, 2024)
+
+- Fixed `href` for linked modules via `rel="modulepreload"`
+
 ## 0.3.0 (Jul 7, 2024)
 
 - Fixed `ArrayHelper` import
