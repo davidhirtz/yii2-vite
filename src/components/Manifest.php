@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace davidhirtz\yii2\vite\components;
 
 use Yii;
@@ -35,16 +37,25 @@ class Manifest
         }
 
         $tags = [
-            $path => [
-                'type' => self::TYPE_JS,
-                'url' => $data['file'],
-                'options' => [
-                    'crossorigin' => true,
-                    'integrity' => $data['integrity'] ?? null,
-                    'type' => 'module',
-                    ...$jsOptions,
+            $path => in_array(pathinfo($path, PATHINFO_EXTENSION), ['css', 'sass', 'scss', 'styl', 'stylus'])
+                ? [
+                    'type' => self::TYPE_CSS,
+                    'url' => $data['file'],
+                    'options' => [
+                        'rel' => 'stylesheet',
+                        ...$cssOptions
+                    ],
+                ]
+                : [
+                    'type' => self::TYPE_JS,
+                    'url' => $data['file'],
+                    'options' => [
+                        'crossorigin' => true,
+                        'integrity' => $data['integrity'] ?? null,
+                        'type' => 'module',
+                        ...$jsOptions,
+                    ],
                 ],
-            ],
         ];
 
         $importFiles = [];
