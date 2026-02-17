@@ -1,3 +1,8 @@
+## 0.5.0 (Feb 17, 2026)
+
+- Requires PHP 8.3+
+- Allows CSS files as entry points
+
 ## 0.4.0 (Jul 29, 2024)
 
 - Fixed `href` for linked modules via `rel="modulepreload"`

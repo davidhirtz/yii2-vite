@@ -10,9 +10,9 @@ use yii\helpers\ArrayHelper;
 
 class Manifest
 {
-    final public const TYPE_JS = 'js';
-    final public const TYPE_CSS = 'css';
-    final public const TYPE_LINK = 'link';
+    final public const string TYPE_JS = 'js';
+    final public const string TYPE_CSS = 'css';
+    final public const string TYPE_LINK = 'link';
 
     public readonly array $data;
     public readonly string $path;
@@ -34,6 +34,13 @@ class Manifest
 
         if (empty($data['file'])) {
             throw new InvalidConfigException("File \"$path\" not found in Vite manifest.");
+        }
+
+        $asyncCss = ArrayHelper::remove($cssOptions, 'async', false);
+
+        if ($asyncCss) {
+            $cssOptions['media'] ??= 'print';
+            $cssOptions['onload'] ??= "this.media='all'";
         }
 
         $tags = [
@@ -72,13 +79,6 @@ class Manifest
                     ...$jsOptions,
                 ],
             ];
-        }
-
-        $asyncCss = ArrayHelper::remove($cssOptions, 'async', false);
-
-        if ($asyncCss) {
-            $cssOptions['media'] ??= 'print';
-            $cssOptions['onload'] ??= "this.media='all'";
         }
 
         $cssFiles = [];
