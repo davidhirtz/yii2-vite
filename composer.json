@@ -12,33 +12,37 @@
   ],
   "require": {
     "php": "^8.3",
-    "guzzlehttp/guzzle": "^7.0",
-    "yiisoft/yii2": "^2.0"
+    "davidhirtz/yii2-skeleton": "^3.6"
   },
   "require-dev": {
-    "rector/rector": "^2.0",
-    "symfony/var-dumper": "^7.4",
-    "symplify/easy-coding-standard": "^13.0"
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^12.5"
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
-      "davidhirtz\\yii2\\vite\\": "src"
+      "Hirtz\\Vite\\": "src"
     }
   },
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://asset-packagist.org"
+  "autoload-dev": {
+    "psr-4": {
+      "Hirtz\\Vite\\Tests\\": "tests"
     }
-  ],
+  },
+  "extra": {
+    "bootstrap": "Hirtz\\Vite\\Bootstrap",
+    "branch-alias": {
+      "dev-main": "3.x-dev"
+    }
+  },
   "config": {
     "allow-plugins": {
       "yiisoft/yii2-composer": true
     }
   },
   "scripts": {
-    "check-cs": "ecs check --ansi",
-    "fix-cs": "ecs check --ansi --fix",
-    "rector": "rector"
+    "phpstan": "phpstan --memory-limit=2G",
+    "test": "phpunit"
   }
 }

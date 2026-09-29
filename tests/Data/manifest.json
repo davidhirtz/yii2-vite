@@ -1,0 +1,56 @@
+{
+  "_shared-B7PI925R.js": {
+    "file": "assets/shared-B7PI925R.js",
+    "name": "shared",
+    "css": ["assets/shared-ChJ_j-JJ.css"],
+    "integrity": "sha384-shared"
+  },
+  "_vendor-C1xUmRwd.js": {
+    "file": "assets/vendor-C1xUmRwd.js",
+    "name": "vendor",
+    "imports": ["_shared-B7PI925R.js"]
+  },
+  "_cycle-a-DxT5.js": {
+    "file": "assets/cycle-a-DxT5.js",
+    "imports": ["_cycle-b-Bq2w.js"],
+    "css": ["assets/cycle-a-Dd3e.css"]
+  },
+  "_cycle-b-Bq2w.js": {
+    "file": "assets/cycle-b-Bq2w.js",
+    "imports": ["_cycle-a-DxT5.js"],
+    "css": ["assets/cycle-b-Ab1c.css"]
+  },
+  "resources/css/print.scss": {
+    "file": "assets/print-D5sQo2Xn.css",
+    "src": "resources/css/print.scss",
+    "isEntry": true
+  },
+  "resources/images/logo.svg": {
+    "file": "assets/logo-BuPIv-Tb.svg",
+    "src": "resources/images/logo.svg"
+  },
+  "resources/js/app.ts": {
+    "file": "assets/app-BRBmoGS9.js",
+    "name": "app",
+    "src": "resources/js/app.ts",
+    "isEntry": true,
+    "imports": ["_shared-B7PI925R.js", "_vendor-C1xUmRwd.js"],
+    "dynamicImports": ["resources/js/lazy.ts"],
+    "css": ["assets/app-5UjPuW-k.css"],
+    "integrity": "sha384-app"
+  },
+  "resources/js/cycle.ts": {
+    "file": "assets/cycle-Ck9a.js",
+    "src": "resources/js/cycle.ts",
+    "isEntry": true,
+    "imports": ["_cycle-a-DxT5.js"]
+  },
+  "resources/js/lazy.ts": {
+    "file": "assets/lazy-CvGQzq7L.js",
+    "name": "lazy",
+    "src": "resources/js/lazy.ts",
+    "isDynamicEntry": true,
+    "imports": ["_shared-B7PI925R.js"],
+    "css": ["assets/lazy-Bk3c.css"]
+  }
+}

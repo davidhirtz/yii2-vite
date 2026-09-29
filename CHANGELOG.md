@@ -1,3 +1,15 @@
+## 3.0.0 (in development)
+
+- Requires `davidhirtz/yii2-skeleton` `^3.6` and is registered as the `vite` component by the bundle's `Bootstrap`; `Vite::current()` returns it. Version `0.x` (branch `v0`) stays for projects without the skeleton
+- Renamed the namespace from `davidhirtz\yii2\vite\components\` to `Hirtz\Vite\`
+- Renamed `$devBaseUrl` to `$devServerUrl` and `$devBaseUrlInternal` to `$devServerInternalUrl`; `$baseUrl` defaults to `@web/dist` and takes an alias
+- Added `@vite/client` to the page while the dev server runs, so every entry gets hot module replacement; a stylesheet entry is linked as a stylesheet instead of loaded as a script
+- Changed the dev server check to a TCP connection bounded by `$devServerTimeout` (0.1 seconds), replacing Guzzle, which waited indefinitely for an unreachable host
+- Added `registerJsModule()` and `getUrl()`, which returns the URL of any manifest entry, assets included, and registers nothing; removed `getScriptUrl()`, `getScriptUrlFromDevServer()`, `getScriptUrlFromManifest()`, `registerFromDevServer()` and `registerFromManifest()`
+- Changed `Manifest` to hold `Chunk` objects (`getChunk()`, `getImportedChunks()`, `getCssFiles()`) and throw `InvalidManifestException` for a missing or invalid manifest; removed `$data`, `getTagsForPath()` and the `TYPE_*` constants
+- Changed stylesheets to follow Vite's order, an imported chunk's before the entry's own; script options no longer leak onto the `modulepreload` links, which carry the view's CSP nonce
+- Removed the `async` stylesheet option, whose inline `onload` handler a nonce CSP blocks
+
 ## 0.5.0 (Feb 17, 2026)
 
 - Requires PHP 8.3+

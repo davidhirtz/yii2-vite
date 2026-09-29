@@ -1,0 +1,15 @@
+name: CI
+
+# On demand only: the release script dispatches this before it tags, and nothing runs on a push. The work is in
+# the skeleton's reusable bundle-ci.yml, so a fix there reaches every bundle on its next run.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: davidhirtz/yii2-skeleton/.github/workflows/bundle-ci.yml@main
