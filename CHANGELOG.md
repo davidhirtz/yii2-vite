@@ -1,3 +1,7 @@
+## Unreleased
+
+- Requires `davidhirtz/yii2-skeleton` `^3.8`: the `vite` component is declared through `ConfigBootstrapInterface`
+
 ## 3.0.0 (September 29, 2026)
 
 - Requires `davidhirtz/yii2-skeleton` `^3.6` and is registered as the `vite` component by the bundle's `Bootstrap`; `Vite::current()` returns it. Version `0.x` (branch `v0`) stays for projects without the skeleton

@@ -34,6 +34,14 @@ class ViteTest extends TestCase
         self::assertSame(Yii::$app->get('vite'), Vite::current());
     }
 
+    public function testAProjectConfiguresTheComponentWithoutItsClass(): void
+    {
+        $this->config['components']['vite'] = ['baseUrl' => '/build'];
+        $this->reloadApplication();
+
+        self::assertSame('/build', Vite::current()->baseUrl);
+    }
+
     public function testDevServerIsOffOutsideTheDevEnvironment(): void
     {
         self::assertFalse(Vite::current()->useDevServer);
@@ -218,7 +226,7 @@ class ViteTest extends TestCase
     {
         return new Vite([
             'baseUrl' => '/dist/',
-            'manifestPath' => ManifestTest::MANIFEST,
+            'manifestPath' => __DIR__ . '/Data/manifest.json',
             ...$config,
         ]);
     }

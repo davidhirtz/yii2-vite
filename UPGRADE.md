@@ -7,9 +7,8 @@
 
 ## Configuration
 
-The bundle registers the `vite` component itself, so an entry that only named the class can go. An entry that
-configures anything, in any environment's config, keeps the `class` (now `Hirtz\Vite\Vite`): Yii refuses a component
-without one while the application is built, before the bundle's `Bootstrap` runs.
+The bundle registers the `vite` component itself: drop the `class` from the project's config, and the whole entry
+when it only repeated defaults.
 
 | 0.x                  | 3.0                    |
 |----------------------|------------------------|

@@ -4,19 +4,25 @@ declare(strict_types=1);
 
 namespace Hirtz\Vite;
 
-use Hirtz\Skeleton\Console\Application as ConsoleApplication;
-use Hirtz\Skeleton\Web\Application as WebApplication;
-use yii\base\BootstrapInterface;
+use Hirtz\Skeleton\Base\ConfigBootstrapInterface;
+use Override;
 
-class Bootstrap implements BootstrapInterface
+class Bootstrap implements ConfigBootstrapInterface
 {
-    /**
-     * @param ConsoleApplication|WebApplication<\Hirtz\Skeleton\Models\User> $app
-     */
+    #[Override]
+    public static function getDefaultConfig(): array
+    {
+        return [
+            'components' => [
+                'vite' => [
+                    'class' => Vite::class,
+                ],
+            ],
+        ];
+    }
+
+    #[Override]
     public function bootstrap($app): void
     {
-        $app->extendComponent('vite', [
-            'class' => Vite::class,
-        ]);
     }
 }
