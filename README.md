@@ -23,11 +23,14 @@ export default defineConfig({
 
 ## Configuration
 
-The bundle registers the `vite` component. Everything is optional; these are the defaults:
+The bundle registers the `vite` component, so a project using the defaults configures nothing. A project that does
+configure it names the `class`: Yii refuses a component without one while the application is built, before the
+bundle's `Bootstrap` runs. These are the defaults:
 
 ```php
 'components' => [
     'vite' => [
+        'class' => \Hirtz\Vite\Vite::class,
         'baseUrl' => '@web/dist',
         'manifestPath' => '@webroot/dist/.vite/manifest.json',
         'useDevServer' => YII_ENV_DEV,
