@@ -1,4 +1,4 @@
-## Unreleased
+## 3.1.0 (September 30, 2026)
 
 - Requires `davidhirtz/yii2-skeleton` `^3.8`: the `vite` component is declared through `ConfigBootstrapInterface`
 
