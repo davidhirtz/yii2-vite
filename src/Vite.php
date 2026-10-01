@@ -32,6 +32,13 @@ class Vite extends Component
     public int $inlineCssMaxSize = 0;
 
     /**
+     * @var bool whether {@see registerJsModule()} adds a `modulepreload` link for the entry itself. The page's inline
+     * module script that imports it comes last in the body, so the browser would otherwise request the entry only
+     * once the whole page is parsed.
+     */
+    public bool $preloadJsModule = true;
+
+    /**
      * @var string the file system path of the manifest `vite build` writes with `build.manifest` enabled
      */
     public string $manifestPath = '@webroot/dist/.vite/manifest.json';
@@ -132,6 +139,10 @@ class Vite extends Component
         if ($this->isDevServerRunning()) {
             $this->registerDevServerClient();
         } else {
+            if ($this->preloadJsModule) {
+                $this->registerModulePreload($this->getManifest()->getChunk($entry), true);
+            }
+
             $this->registerDependencies($entry, $cssOptions, true);
         }
 
@@ -221,14 +232,21 @@ class Vite extends Component
         $this->registerStylesheets($files, $cssOptions);
 
         foreach ($manifest->getImportedChunks($entry) as $chunk) {
-            $view->registerLinkTag([
-                'rel' => 'modulepreload',
-                'href' => $this->getBuildUrl($chunk->file),
-                'crossorigin' => $crossorigin,
-                'integrity' => $chunk->integrity,
-                'nonce' => $view->nonce,
-            ], $chunk->file);
+            $this->registerModulePreload($chunk, $crossorigin);
         }
+    }
+
+    protected function registerModulePreload(Chunk $chunk, mixed $crossorigin): void
+    {
+        $view = $this->getView();
+
+        $view->registerLinkTag([
+            'rel' => 'modulepreload',
+            'href' => $this->getBuildUrl($chunk->file),
+            'crossorigin' => $crossorigin,
+            'integrity' => $chunk->integrity,
+            'nonce' => $view->nonce,
+        ], $chunk->file);
     }
 
     /**

@@ -37,6 +37,7 @@ The bundle registers the `vite` component, so a project configures only what dif
         'devServerInternalUrl' => null, // where PHP reaches the dev server, if not at `devServerUrl`
         'devServerTimeout' => 0.1, // seconds
         'inlineCssMaxSize' => 0, // bytes, uncompressed; `0` links every stylesheet
+        'preloadJsModule' => true, // a `modulepreload` link for a `registerJsModule()` entry
     ],
 ],
 ```
@@ -77,7 +78,8 @@ Vite::current()->register('resources/css/print.scss', ['media' => 'print']);
 // Options of the script tag
 Vite::current()->register('resources/js/app.ts', jsOptions: ['position' => View::POS_HEAD]);
 
-// Imported by the page's module script, its default export called with the arguments (`View::registerJsModule()`)
+// Imported by the page's module script, its default export called with the arguments (`View::registerJsModule()`).
+// A `modulepreload` link for the entry starts its request from the head, `'preloadJsModule' => false` leaves it out
 Vite::current()->registerJsModule('resources/js/gallery.ts', ['selector' => '#gallery']);
 
 // The URL of any manifest entry, an image included; registers nothing

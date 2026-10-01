@@ -131,8 +131,23 @@ class ViteTest extends TestCase
         self::assertSame(["import a from '/dist/assets/app-BRBmoGS9.js';"], array_values($view->js[View::POS_IMPORT] ?? []));
         self::assertSame(['a({"id":1});'], array_values($view->js[View::POS_MODULE] ?? []));
         self::assertCount(2, $view->cssFiles);
-        self::assertCount(2, $view->linkTags);
+        self::assertSame([
+            'assets/app-BRBmoGS9.js',
+            'assets/shared-B7PI925R.js',
+            'assets/vendor-C1xUmRwd.js',
+        ], array_keys($view->linkTags));
+        self::assertSame('<link href="/dist/assets/app-BRBmoGS9.js" rel="modulepreload" crossorigin integrity="sha384-app">', $view->linkTags['assets/app-BRBmoGS9.js']);
         self::assertSame([], $view->jsFiles);
+    }
+
+    public function testRegisterJsModuleWithoutPreload(): void
+    {
+        $this->createVite(['preloadJsModule' => false])->registerJsModule('resources/js/app.ts');
+
+        self::assertSame([
+            'assets/shared-B7PI925R.js',
+            'assets/vendor-C1xUmRwd.js',
+        ], array_keys($this->getView()->linkTags));
     }
 
     public function testGetUrlRegistersNothing(): void
@@ -255,6 +270,7 @@ class ViteTest extends TestCase
 
         self::assertArrayHasKey('@vite/client', $view->jsFiles[View::POS_HEAD] ?? []);
         self::assertSame(["import 'http://localhost:5173/resources/js/app.ts';"], array_values($view->js[View::POS_IMPORT] ?? []));
+        self::assertSame([], $view->linkTags);
     }
 
     public function testDevServerDownFallsBackToTheBuild(): void

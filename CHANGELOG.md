@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added `$preloadJsModule`, on by default: `registerJsModule()` adds a `modulepreload` link for the entry itself
+
 ## 3.2.1 (October 1, 2026)
 
 - Fixed inlining a stylesheet the manifest names with a query string (`app.css?v=…`), which was looked for on disk under that name
