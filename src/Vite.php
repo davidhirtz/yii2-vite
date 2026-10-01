@@ -297,7 +297,7 @@ class Vite extends Component
             throw new InvalidConfigException("The Vite stylesheet \"$path\" could not be read.");
         }
 
-        $baseUrl = dirname($this->getBuildUrl($file)) . '/';
+        $baseUrl = dirname($this->getBuildUrl((string)strtok($file, '?#'))) . '/';
 
         $css = (string)preg_replace_callback(
             '/url\(\s*([\'"]?)(?![a-z][a-z\d+.-]*:|\/|#)(?:\.\/)?([^\'")]+)\1\s*\)/i',
@@ -337,9 +337,12 @@ class Vite extends Component
         return rtrim(Yii::getAlias($this->baseUrl), '/') . '/' . $file;
     }
 
+    /**
+     * A built file's path on disk, without the query string or fragment a manifest may name it with (`app.css?v=…`).
+     */
     protected function getBuildPath(string $file): string
     {
-        return rtrim(Yii::getAlias($this->basePath), '/') . '/' . $file;
+        return rtrim(Yii::getAlias($this->basePath), '/') . '/' . (string)strtok($file, '?#');
     }
 
     protected function getDevServerUrl(string $path): string

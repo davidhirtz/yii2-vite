@@ -52,5 +52,12 @@
     "isDynamicEntry": true,
     "imports": ["_shared-B7PI925R.js"],
     "css": ["assets/lazy-Bk3c.css"]
+  },
+  "resources/js/versioned.ts": {
+    "file": "versioned.js?v=hrp6o",
+    "name": "versioned",
+    "src": "resources/js/versioned.ts",
+    "isEntry": true,
+    "css": ["versioned.css?v=hrp6o"]
   }
 }

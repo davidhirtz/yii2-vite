@@ -1,3 +1,7 @@
+## Unreleased
+
+- Fixed inlining a stylesheet the manifest names with a query string (`app.css?v=…`), which was looked for on disk under that name
+
 ## 3.2.0 (October 1, 2026)
 
 - Added `$inlineCssMaxSize` and `$basePath`: an entry's stylesheets up to that size are inlined as `<style>` tags

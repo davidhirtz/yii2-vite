@@ -170,6 +170,13 @@ class ViteTest extends TestCase
         self::assertCount(2, $view->linkTags);
     }
 
+    public function testInlineCssOfAFileNamedWithAQueryString(): void
+    {
+        $this->createVite(['inlineCssMaxSize' => 1024])->register('resources/js/versioned.ts');
+
+        self::assertSame(['versioned.css?v=hrp6o' => "<style>.versioned{background:url(/dist/bg.png)}\n</style>"], $this->getView()->css);
+    }
+
     public function testInlineCssStylesheetEntry(): void
     {
         $this->createVite(['inlineCssMaxSize' => 1024])->register('resources/css/print.scss', ['media' => 'print']);
