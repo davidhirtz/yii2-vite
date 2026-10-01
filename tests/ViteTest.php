@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Web\View;
 use Hirtz\Vite\Vite;
 use Override;
 use Yii;
+use yii\base\InvalidConfigException;
 
 class ViteTest extends TestCase
 {
@@ -148,6 +149,61 @@ class ViteTest extends TestCase
         self::assertSame([], $view->linkTags);
     }
 
+    public function testInlineCss(): void
+    {
+        $this->createVite(['inlineCssMaxSize' => 251])->register('resources/js/app.ts', ['media' => 'screen']);
+        $view = $this->getView();
+
+        self::assertSame([], $view->cssFiles);
+        self::assertSame(['assets/shared-ChJ_j-JJ.css', 'assets/app-5UjPuW-k.css'], array_keys($view->css));
+        self::assertSame("<style media=\"screen\">.shared{color:red}\n</style>", $view->css['assets/shared-ChJ_j-JJ.css'] ?? null);
+
+        $css = $view->css['assets/app-5UjPuW-k.css'] ?? '';
+
+        self::assertStringContainsString('url(/dist/assets/font-Ab12.woff2)', $css);
+        self::assertStringContainsString('url("/fonts/x.woff")', $css);
+        self::assertStringContainsString('url(data:image/png;base64,AA==)', $css);
+        self::assertStringContainsString('url(#mask)', $css);
+        self::assertStringContainsString('url(https://cdn.test/a.png)', $css);
+        self::assertStringContainsString("url('/dist/assets/../images/bg.png')", $css);
+        self::assertStringContainsString('/*# sourceMappingURL=/dist/assets/app-5UjPuW-k.css.map */', $css);
+        self::assertCount(2, $view->linkTags);
+    }
+
+    public function testInlineCssStylesheetEntry(): void
+    {
+        $this->createVite(['inlineCssMaxSize' => 1024])->register('resources/css/print.scss', ['media' => 'print']);
+        $view = $this->getView();
+
+        self::assertSame([], $view->cssFiles);
+        self::assertSame(['assets/print-D5sQo2Xn.css' => "<style media=\"print\">.print{display:none}\n</style>"], $view->css);
+    }
+
+    public function testInlineCssLinksAnEntryTooLargeAsAWhole(): void
+    {
+        $this->createVite(['inlineCssMaxSize' => 250])->register('resources/js/app.ts');
+        $view = $this->getView();
+
+        self::assertSame([], $view->css);
+        self::assertSame(['assets/shared-ChJ_j-JJ.css', 'assets/app-5UjPuW-k.css'], array_keys($view->cssFiles));
+    }
+
+    public function testInlineCssKeepsAStylesheetAlreadyLinked(): void
+    {
+        $this->getView()->registerCssFile('/dist/assets/shared-ChJ_j-JJ.css', [], 'assets/shared-ChJ_j-JJ.css');
+        $this->createVite(['inlineCssMaxSize' => 1024])->register('resources/js/app.ts');
+        $view = $this->getView();
+
+        self::assertSame(['assets/shared-ChJ_j-JJ.css'], array_keys($view->cssFiles));
+        self::assertSame(['assets/app-5UjPuW-k.css'], array_keys($view->css));
+    }
+
+    public function testInlineCssWithoutTheBuild(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+        $this->createVite(['inlineCssMaxSize' => 1024, 'basePath' => __DIR__ . '/Missing'])->register('resources/js/app.ts');
+    }
+
     public function testBaseUrl(): void
     {
         Yii::setAlias('@web', '/sub');
@@ -226,6 +282,7 @@ class ViteTest extends TestCase
     {
         return new Vite([
             'baseUrl' => '/dist/',
+            'basePath' => __DIR__ . '/Data',
             'manifestPath' => __DIR__ . '/Data/manifest.json',
             ...$config,
         ]);

@@ -21,6 +21,17 @@ class Vite extends Component
     public string $baseUrl = '@web/dist';
 
     /**
+     * @var string the file system path of the built files, `build.outDir`, read for stylesheets to inline
+     */
+    public string $basePath = '@webroot/dist';
+
+    /**
+     * @var int the most bytes an entry's stylesheets may hold together to be inlined as `<style>` tags instead of
+     * linked, `0` never inlines. An entry's stylesheets are inlined all or none, so their order holds.
+     */
+    public int $inlineCssMaxSize = 0;
+
+    /**
      * @var string the file system path of the manifest `vite build` writes with `build.manifest` enabled
      */
     public string $manifestPath = '@webroot/dist/.vite/manifest.json';
@@ -94,9 +105,7 @@ class Vite extends Component
 
         $chunk = $this->getManifest()->getChunk($entry);
 
-        if ($chunk->isStylesheet()) {
-            $this->getView()->registerCssFile($this->getBuildUrl($chunk->file), $cssOptions, $chunk->file);
-        } else {
+        if (!$chunk->isStylesheet()) {
             $this->getView()->registerJsFile($this->getBuildUrl($chunk->file), [
                 'type' => 'module',
                 'crossorigin' => true,
@@ -202,9 +211,14 @@ class Vite extends Component
         $manifest = $this->getManifest();
         $view = $this->getView();
 
-        foreach ($manifest->getCssFiles($entry) as $file) {
-            $view->registerCssFile($this->getBuildUrl($file), $cssOptions, $file);
+        $chunk = $manifest->getChunk($entry);
+        $files = $manifest->getCssFiles($entry);
+
+        if ($chunk->isStylesheet()) {
+            $files[] = $chunk->file;
         }
+
+        $this->registerStylesheets($files, $cssOptions);
 
         foreach ($manifest->getImportedChunks($entry) as $chunk) {
             $view->registerLinkTag([
@@ -215,6 +229,83 @@ class Vite extends Component
                 'nonce' => $view->nonce,
             ], $chunk->file);
         }
+    }
+
+    /**
+     * Links the stylesheets, or inlines them when together they fit `$inlineCssMaxSize`. One already registered
+     * either way, by an entry sharing it, is left as it is.
+     *
+     * @param list<string> $files
+     * @param array<string, mixed> $cssOptions
+     */
+    protected function registerStylesheets(array $files, array $cssOptions): void
+    {
+        $view = $this->getView();
+        $files = array_filter($files, fn (string $file): bool => !isset($view->cssFiles[$file]) && !isset($view->css[$file]));
+
+        if ($this->shouldInlineCss($files)) {
+            foreach ($files as $file) {
+                $view->registerCss($this->getInlineCss($file), $cssOptions, $file);
+            }
+
+            return;
+        }
+
+        foreach ($files as $file) {
+            $view->registerCssFile($this->getBuildUrl($file), $cssOptions, $file);
+        }
+    }
+
+    /**
+     * @param array<array-key, string> $files
+     */
+    protected function shouldInlineCss(array $files): bool
+    {
+        if ($this->inlineCssMaxSize <= 0 || !$files) {
+            return false;
+        }
+
+        $size = 0;
+
+        foreach ($files as $file) {
+            $path = $this->getBuildPath($file);
+            $fileSize = @filesize($path);
+
+            if ($fileSize === false) {
+                throw new InvalidConfigException("The Vite stylesheet \"$path\" was not found. Is `basePath` Vite's `build.outDir`?");
+            }
+
+            $size += $fileSize;
+
+            if ($size > $this->inlineCssMaxSize) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * A built stylesheet's contents, its relative URLs made absolute: inlined, they would resolve against the page.
+     */
+    protected function getInlineCss(string $file): string
+    {
+        $path = $this->getBuildPath($file);
+        $css = @file_get_contents($path);
+
+        if ($css === false) {
+            throw new InvalidConfigException("The Vite stylesheet \"$path\" could not be read.");
+        }
+
+        $baseUrl = dirname($this->getBuildUrl($file)) . '/';
+
+        $css = (string)preg_replace_callback(
+            '/url\(\s*([\'"]?)(?![a-z][a-z\d+.-]*:|\/|#)(?:\.\/)?([^\'")]+)\1\s*\)/i',
+            fn (array $matches): string => "url($matches[1]$baseUrl$matches[2]$matches[1])",
+            $css,
+        );
+
+        return (string)preg_replace('/(\/\*# sourceMappingURL=)(?![a-z][a-z\d+.-]*:|\/)(?:\.\/)?/i', '$1' . $baseUrl, $css);
     }
 
     protected function pingDevServer(): bool
@@ -244,6 +335,11 @@ class Vite extends Component
     protected function getBuildUrl(string $file): string
     {
         return rtrim(Yii::getAlias($this->baseUrl), '/') . '/' . $file;
+    }
+
+    protected function getBuildPath(string $file): string
+    {
+        return rtrim(Yii::getAlias($this->basePath), '/') . '/' . $file;
     }
 
     protected function getDevServerUrl(string $path): string
