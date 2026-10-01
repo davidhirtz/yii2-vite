@@ -3,7 +3,7 @@
 [Vite](https://vite.dev/) for the [Yii 2](https://www.yiiframework.com/) skeleton: registers an entry's script,
 stylesheets and `modulepreload` links from Vite's manifest, or from the dev server while it runs.
 
-Version 3 requires `davidhirtz/yii2-skeleton` `^3.6`. Projects outside the skeleton stay on `^0.5` (branch `v0`).
+Version 3 requires `davidhirtz/yii2-skeleton` `^3.8`. Projects outside the skeleton stay on `^0.5` (branch `v0`).
 
 ## Vite
 

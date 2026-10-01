@@ -3,7 +3,7 @@
 ## Requirements
 
 - PHP `^8.3`
-- `davidhirtz/yii2-skeleton` `^3.6`. A project without it stays on `davidhirtz/yii2-vite` `^0.5`
+- `davidhirtz/yii2-skeleton` `^3.8`. A project without it stays on `davidhirtz/yii2-vite` `^0.5`
 
 ## Configuration
 
