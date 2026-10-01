@@ -1,4 +1,4 @@
-## Unreleased
+## 3.2.0 (October 1, 2026)
 
 - Added `$inlineCssMaxSize` and `$basePath`: an entry's stylesheets up to that size are inlined as `<style>` tags
 
