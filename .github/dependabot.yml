@@ -1,0 +1,8 @@
+# Composer and npm are covered by the security alerts: a bundle ships no composer.lock, and an npm lock bumped
+# without rebuilding the committed dist/ would ship the old code on.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
