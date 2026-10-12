@@ -1,4 +1,4 @@
-## Unreleased
+## 3.4.0 (October 12, 2026)
 
 - Changed the defaults of `$basePath` and `$manifestPath` to `@root/web/dist` (was `@webroot/dist`)
 
