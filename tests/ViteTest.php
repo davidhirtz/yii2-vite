@@ -49,6 +49,16 @@ class ViteTest extends TestCase
         self::assertFalse(Vite::current()->isDevServerRunning());
     }
 
+    public function testBuildIsReadFromTheProjectRootNotTheTestWebroot(): void
+    {
+        $vite = Vite::current();
+        $root = Yii::getAlias('@root/web/dist');
+
+        self::assertNotSame(Yii::getAlias('@webroot/dist'), $root);
+        self::assertSame($root, Yii::getAlias($vite->basePath));
+        self::assertSame("$root/.vite/manifest.json", Yii::getAlias($vite->manifestPath));
+    }
+
     public function testRegisterScriptEntry(): void
     {
         $this->createVite()->register('/resources/js/app.ts');

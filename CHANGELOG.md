@@ -1,3 +1,7 @@
+## Unreleased
+
+- Changed the defaults of `$basePath` and `$manifestPath` to `@root/web/dist` (was `@webroot/dist`)
+
 ## 3.3.0 (October 1, 2026)
 
 - Added `$preloadJsModule`, on by default: `registerJsModule()` adds a `modulepreload` link for the entry itself

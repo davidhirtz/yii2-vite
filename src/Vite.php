@@ -21,9 +21,10 @@ class Vite extends Component
     public string $baseUrl = '@web/dist';
 
     /**
-     * @var string the file system path of the built files, `build.outDir`, read for stylesheets to inline
+     * @var string the file system path of the built files, `build.outDir`, read for stylesheets to inline. Not
+     * `@webroot`, which `Test\TestCase` points at a scratch directory.
      */
-    public string $basePath = '@webroot/dist';
+    public string $basePath = '@root/web/dist';
 
     /**
      * @var int the most bytes an entry's stylesheets may hold together to be inlined as `<style>` tags instead of
@@ -41,7 +42,7 @@ class Vite extends Component
     /**
      * @var string the file system path of the manifest `vite build` writes with `build.manifest` enabled
      */
-    public string $manifestPath = '@webroot/dist/.vite/manifest.json';
+    public string $manifestPath = '@root/web/dist/.vite/manifest.json';
 
     /**
      * @var bool whether the dev server may be used at all

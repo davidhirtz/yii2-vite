@@ -29,8 +29,8 @@ The bundle registers the `vite` component, so a project configures only what dif
 'components' => [
     'vite' => [
         'baseUrl' => '@web/dist',
-        'basePath' => '@webroot/dist', // `build.outDir`, read for stylesheets to inline
-        'manifestPath' => '@webroot/dist/.vite/manifest.json',
+        'basePath' => '@root/web/dist', // `build.outDir`, read for stylesheets to inline
+        'manifestPath' => '@root/web/dist/.vite/manifest.json',
         'useDevServer' => YII_ENV_DEV,
         'checkDevServer' => true,
         'devServerUrl' => 'http://localhost:5173',
