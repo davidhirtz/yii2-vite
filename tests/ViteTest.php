@@ -211,6 +211,18 @@ class ViteTest extends TestCase
         self::assertSame(['assets/print-D5sQo2Xn.css' => "<style media=\"print\">.print{display:none}\n</style>"], $view->css);
     }
 
+    public function testInlineCssKeepsTheUrlsWithinADataUri(): void
+    {
+        $this->createVite(['inlineCssMaxSize' => 1024])->register('resources/css/noise.css');
+        $css = $this->getView()->css['assets/noise-Cx7aQ2.css'] ?? '';
+
+        self::assertStringContainsString("%3Crect filter='url(%23n)'/%3E", $css);
+        self::assertStringContainsString('<rect fill="url(\\\'g.svg\\\')"/>', $css);
+        self::assertStringContainsString('url(/dist/assets/noise.png)', $css);
+        self::assertStringNotContainsString('/dist/assets/%23n', $css);
+        self::assertStringNotContainsString('/dist/assets/g.svg', $css);
+    }
+
     public function testInlineCssLinksAnEntryTooLargeAsAWhole(): void
     {
         $this->createVite(['inlineCssMaxSize' => 250])->register('resources/js/app.ts');

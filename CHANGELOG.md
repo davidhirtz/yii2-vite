@@ -1,3 +1,7 @@
+## Unreleased
+
+- Fixed inlining a stylesheet rewriting the `url()` within a quoted data URI, such as an SVG filter reference
+
 ## 3.4.0 (October 12, 2026)
 
 - Changed the defaults of `$basePath` and `$manifestPath` to `@root/web/dist` (was `@webroot/dist`)

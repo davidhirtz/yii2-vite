@@ -25,6 +25,11 @@
     "src": "resources/css/print.scss",
     "isEntry": true
   },
+  "resources/css/noise.css": {
+    "file": "assets/noise-Cx7aQ2.css",
+    "src": "resources/css/noise.css",
+    "isEntry": true
+  },
   "resources/images/logo.svg": {
     "file": "assets/logo-BuPIv-Tb.svg",
     "src": "resources/images/logo.svg"

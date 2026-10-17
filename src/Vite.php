@@ -318,9 +318,11 @@ class Vite extends Component
 
         $baseUrl = dirname($this->getBuildUrl((string)strtok($file, '?#'))) . '/';
 
+        // A quoted URL with a scheme is skipped whole, so the `url()` of an SVG in a data URI stays untouched.
         $css = (string)preg_replace_callback(
-            '/url\(\s*([\'"]?)(?![a-z][a-z\d+.-]*:|\/|#)(?:\.\/)?([^\'")]+)\1\s*\)/i',
-            fn (array $matches): string => "url($matches[1]$baseUrl$matches[2]$matches[1])",
+            '/url\(\s*([\'"])[a-z][a-z\d+.-]*:(?:(?!\1)[^\\\\]|\\\\.)*\1\s*\)(*SKIP)(*FAIL)'
+            . '|url\(\s*([\'"]?)(?![a-z][a-z\d+.-]*:|\/|#)(?:\.\/)?([^\'")]+)\2\s*\)/i',
+            fn (array $matches): string => "url($matches[2]$baseUrl$matches[3]$matches[2])",
             $css,
         );
 
