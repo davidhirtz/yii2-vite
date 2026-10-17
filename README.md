@@ -21,6 +21,48 @@ export default defineConfig({
 });
 ```
 
+### Reloading on PHP
+
+Vite does not watch PHP. `@tailwindcss/vite` reloads the page only for a file its last scan found, so a view created
+while the dev server runs neither reloads nor gets its classes until another scanned file changes, and PHP outside the
+`@source` globs never reloads. This plugin reloads for a PHP file Vite has no module for and invalidates the
+stylesheets, so Tailwind scans again:
+
+```ts
+import {defineConfig, isCSSRequest, type ModuleNode, type Plugin} from 'vite';
+
+const reloadPhp = (paths = ['app', 'config', 'messages', 'resources/views']): Plugin => ({
+    name: 'reload-php',
+    apply: 'serve',
+    configureServer(server) {
+        server.watcher.add(paths);
+
+        const reload = (file: string): void => {
+            if (!file.endsWith('.php') || server.moduleGraph.getModulesByFile(file)?.size) {
+                return;
+            }
+
+            const seen = new Set<ModuleNode>();
+
+            for (const module of server.moduleGraph.idToModuleMap.values()) {
+                if (isCSSRequest(module.id!)) {
+                    server.moduleGraph.invalidateModule(module, seen, Date.now(), true);
+                }
+            }
+
+            server.ws.send({type: 'full-reload'});
+        };
+
+        server.watcher.on('add', reload);
+        server.watcher.on('change', reload);
+    },
+});
+
+export default defineConfig({
+    plugins: [tailwindcss(), reloadPhp()],
+});
+```
+
 ## Configuration
 
 The bundle registers the `vite` component, so a project configures only what differs from these defaults:
