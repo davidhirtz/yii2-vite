@@ -1,3 +1,7 @@
+## Unreleased
+
+- Fixed a stylesheet entry the manifest names with a query string (`app.css?v=…`) being registered as a script
+
 ## 3.4.1 (October 17, 2026)
 
 - Fixed inlining a stylesheet rewriting the `url()` within a quoted data URI, such as an SVG filter reference

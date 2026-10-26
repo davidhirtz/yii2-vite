@@ -48,7 +48,7 @@ final readonly class Chunk
 
     public function isStylesheet(): bool
     {
-        return str_ends_with($this->file, '.css');
+        return str_ends_with((string)strtok($this->file, '?#'), '.css');
     }
 
     /**

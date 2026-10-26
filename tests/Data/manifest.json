@@ -30,6 +30,11 @@
     "src": "resources/css/noise.css",
     "isEntry": true
   },
+  "resources/css/versioned.css": {
+    "file": "versioned.css?v=hrp6o",
+    "src": "resources/css/versioned.css",
+    "isEntry": true
+  },
   "resources/images/logo.svg": {
     "file": "assets/logo-BuPIv-Tb.svg",
     "src": "resources/images/logo.svg"

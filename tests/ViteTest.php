@@ -123,6 +123,19 @@ class ViteTest extends TestCase
         self::assertSame([], $view->jsFiles);
     }
 
+    public function testRegisterStylesheetEntryNamedWithAQueryString(): void
+    {
+        $this->createVite()->register('resources/css/versioned.css');
+        $view = $this->getView();
+
+        self::assertSame(
+            ['versioned.css?v=hrp6o' => '<link href="/dist/versioned.css?v=hrp6o" rel="stylesheet">'],
+            $view->cssFiles,
+        );
+
+        self::assertSame([], $view->jsFiles);
+    }
+
     public function testSharedChunksAreRegisteredOnce(): void
     {
         $vite = $this->createVite();
