@@ -1,4 +1,4 @@
-## Unreleased
+## 3.4.4 (October 26, 2026)
 
 - Fixed the `modulepreload` link of an imported chunk the manifest names with a query string (`chunk.js?v=…`) not matching the URL the scripts import
 
