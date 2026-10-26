@@ -46,9 +46,14 @@ final readonly class Chunk
         );
     }
 
+    public function getPath(): string
+    {
+        return (string)strtok($this->file, '?#');
+    }
+
     public function isStylesheet(): bool
     {
-        return str_ends_with((string)strtok($this->file, '?#'), '.css');
+        return str_ends_with($this->getPath(), '.css');
     }
 
     /**

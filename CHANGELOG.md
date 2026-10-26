@@ -1,3 +1,7 @@
+## Unreleased
+
+- Fixed the `modulepreload` link of an imported chunk the manifest names with a query string (`chunk.js?v=…`) not matching the URL the scripts import
+
 ## 3.4.3 (October 26, 2026)
 
 - Fixed a stylesheet entry the manifest names with a query string (`app.css?v=…`) being registered as a script

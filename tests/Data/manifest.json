@@ -5,6 +5,10 @@
     "css": ["assets/shared-ChJ_j-JJ.css"],
     "integrity": "sha384-shared"
   },
+  "_versioned-chunk.js": {
+    "file": "versioned-chunk.js?v=hrp6o",
+    "name": "versioned-chunk"
+  },
   "_vendor-C1xUmRwd.js": {
     "file": "assets/vendor-C1xUmRwd.js",
     "name": "vendor",
@@ -68,6 +72,7 @@
     "name": "versioned",
     "src": "resources/js/versioned.ts",
     "isEntry": true,
+    "imports": ["_versioned-chunk.js"],
     "css": ["versioned.css?v=hrp6o"]
   }
 }

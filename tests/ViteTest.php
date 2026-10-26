@@ -136,6 +136,20 @@ class ViteTest extends TestCase
         self::assertSame([], $view->jsFiles);
     }
 
+    public function testImportedChunkNamedWithAQueryStringIsPreloadedAsTheScriptsImportIt(): void
+    {
+        $this->createVite()->registerJsModule('resources/js/versioned.ts');
+        $view = $this->getView();
+
+        self::assertSame(["import a from '/dist/versioned.js?v=hrp6o';"], array_values($view->js[View::POS_IMPORT] ?? []));
+        self::assertSame(['versioned.css?v=hrp6o' => '<link href="/dist/versioned.css?v=hrp6o" rel="stylesheet">'], $view->cssFiles);
+
+        self::assertSame([
+            'versioned.js?v=hrp6o' => '<link href="/dist/versioned.js?v=hrp6o" rel="modulepreload" crossorigin>',
+            'versioned-chunk.js' => '<link href="/dist/versioned-chunk.js" rel="modulepreload" crossorigin>',
+        ], $view->linkTags);
+    }
+
     public function testSharedChunksAreRegisteredOnce(): void
     {
         $vite = $this->createVite();

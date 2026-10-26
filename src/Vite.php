@@ -233,21 +233,24 @@ class Vite extends Component
         $this->registerStylesheets($files, $cssOptions);
 
         foreach ($manifest->getImportedChunks($entry) as $chunk) {
-            $this->registerModulePreload($chunk, $crossorigin);
+            $this->registerModulePreload($chunk, $crossorigin, true);
         }
     }
 
-    protected function registerModulePreload(Chunk $chunk, mixed $crossorigin): void
+    protected function registerModulePreload(Chunk $chunk, mixed $crossorigin, bool $isImported = false): void
     {
         $view = $this->getView();
 
+        // The built scripts import a chunk without the query string a manifest may name it with (`chunk.js?v=…`).
+        $file = $isImported ? $chunk->getPath() : $chunk->file;
+
         $view->registerLinkTag([
             'rel' => 'modulepreload',
-            'href' => $this->getBuildUrl($chunk->file),
+            'href' => $this->getBuildUrl($file),
             'crossorigin' => $crossorigin,
             'integrity' => $chunk->integrity,
             'nonce' => $view->nonce,
-        ], $chunk->file);
+        ], $file);
     }
 
     /**
