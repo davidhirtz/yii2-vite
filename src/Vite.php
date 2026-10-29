@@ -15,68 +15,45 @@ class Vite extends Component
 {
     final public const string CLIENT_KEY = '@vite/client';
 
-    /**
-     * @var string the public URL of the built files, `build.outDir` as the browser sees it
-     */
     public string $baseUrl = '@web/dist';
 
     /**
-     * @var string the file system path of the built files, `build.outDir`, read for stylesheets to inline. Not
-     * `@webroot`, which `Test\TestCase` points at a scratch directory.
+     * Not `@webroot`, which `Test\TestCase` points at a scratch directory.
      */
     public string $basePath = '@root/web/dist';
 
     /**
-     * @var int the most bytes an entry's stylesheets may hold together to be inlined as `<style>` tags instead of
-     * linked, `0` never inlines. An entry's stylesheets are inlined all or none, so their order holds.
+     * An entry's stylesheets are inlined all or none, so their order holds; `0` never inlines.
      */
     public int $inlineCssMaxSize = 0;
 
     /**
-     * @var bool whether {@see registerJsModule()} adds a `modulepreload` link for the entry itself. The page's inline
-     * module script that imports it comes last in the body, so the browser would otherwise request the entry only
-     * once the whole page is parsed.
+     * The inline module script importing the entry comes last in the body, so without the preload the browser
+     * requests the entry only once the whole page is parsed.
      */
     public bool $preloadJsModule = true;
 
-    /**
-     * @var string the file system path of the manifest `vite build` writes with `build.manifest` enabled
-     */
     public string $manifestPath = '@root/web/dist/.vite/manifest.json';
 
-    /**
-     * @var bool whether the dev server may be used at all
-     */
     public bool $useDevServer = YII_ENV_DEV;
 
     /**
-     * @var bool whether the dev server is checked for before it is used. Without the check, a page loads nothing
-     * while the dev server is down.
+     * Without the check, a page loads nothing while the dev server is down.
      */
     public bool $checkDevServer = true;
 
-    /**
-     * @var string the public URL of the dev server
-     */
     public string $devServerUrl = 'http://localhost:5173';
 
     /**
-     * @var string|null the URL PHP reaches the dev server at, when that differs from the browser's (a container or a
-     * VM), defaults to `$devServerUrl`
+     * The URL PHP reaches the dev server at when it differs from the browser's (a container or a VM).
      */
     public ?string $devServerInternalUrl = null;
 
-    /**
-     * @var float seconds the dev server check waits for a connection
-     */
     public float $devServerTimeout = 0.1;
 
     private ?Manifest $manifest = null;
     private ?bool $isDevServerRunning = null;
 
-    /**
-     * The application's `vite` component, which the bundle's `Bootstrap` registers.
-     */
     public static function current(): static
     {
         $vite = Yii::$app->get('vite');
@@ -96,11 +73,8 @@ class Vite extends Component
     }
 
     /**
-     * Registers an entry with the view: its script (or stylesheet), the stylesheets it imports and a
-     * `modulepreload` link for every chunk it imports.
-     *
-     * @param array<string, mixed> $cssOptions the options of every stylesheet link
-     * @param array<string, mixed> $jsOptions the options of the entry's script tag
+     * @param array<string, mixed> $cssOptions
+     * @param array<string, mixed> $jsOptions
      */
     public function register(string $entry, array $cssOptions = [], array $jsOptions = []): void
     {
@@ -126,9 +100,7 @@ class Vite extends Component
     }
 
     /**
-     * Registers an entry as a module imported by the page's inline module script, calling its default export with
-     * `$arguments`, through {@see View::registerJsModule()}. Its stylesheets and imported chunks are registered as
-     * by {@see register()}.
+     * The page's inline module script imports the entry and calls its default export with `$arguments`.
      *
      * @param array<int|string, mixed>|string|null $arguments
      * @param array<string, mixed> $cssOptions
@@ -151,8 +123,7 @@ class Vite extends Component
     }
 
     /**
-     * The URL of a manifest entry: a script, a stylesheet or an asset such as an image imported by a script or
-     * listed in `build.rollupOptions.input`. It registers nothing.
+     * Any manifest entry, an image a script imports included; registers nothing.
      */
     public function getUrl(string $entry): string
     {
@@ -169,9 +140,7 @@ class Vite extends Component
     }
 
     /**
-     * Whether the dev server serves the entries, answered once per instance. The check opens a TCP connection
-     * to `$devServerInternalUrl`, bounded by `$devServerTimeout`, so a dev server behind an address that drops
-     * packets costs a page that long, not a connect timeout.
+     * A dev server behind an address that drops packets costs a page `$devServerTimeout`, not a connect timeout.
      */
     public function isDevServerRunning(): bool
     {
@@ -254,8 +223,7 @@ class Vite extends Component
     }
 
     /**
-     * Links the stylesheets, or inlines them when together they fit `$inlineCssMaxSize`. One already registered
-     * either way, by an entry sharing it, is left as it is.
+     * A stylesheet an entry sharing it already registered, linked or inlined, is left as it is.
      *
      * @param list<string> $files
      * @param array<string, mixed> $cssOptions

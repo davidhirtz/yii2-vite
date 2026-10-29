@@ -7,9 +7,6 @@ namespace Hirtz\Vite;
 use JsonException;
 use Yii;
 
-/**
- * Vite's `manifest.json`, written by `vite build` with the `build.manifest` option.
- */
 class Manifest
 {
     public readonly string $path;
@@ -42,8 +39,7 @@ class Manifest
     }
 
     /**
-     * The chunks an entry imports statically, depth-first, each once, without the entry itself. These are what a
-     * browser would otherwise discover one round trip at a time, so they are preloaded.
+     * Preloaded, since a browser would otherwise discover them one round trip at a time.
      *
      * @return list<Chunk>
      */
@@ -58,8 +54,7 @@ class Manifest
     }
 
     /**
-     * The stylesheets an entry needs, in the order Vite's own HTML links them: an imported chunk's before the
-     * importing one's, so the entry's rules come last and win.
+     * In the order Vite's own HTML links them, an imported chunk's first, so the entry's rules win.
      *
      * @return list<string>
      */

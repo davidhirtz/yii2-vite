@@ -15,7 +15,7 @@ use yii\base\InvalidConfigException;
 class ViteTest extends TestCase
 {
     /**
-     * @var resource|null a listening socket standing in for the dev server
+     * @var resource|null
      */
     private $devServer = null;
 

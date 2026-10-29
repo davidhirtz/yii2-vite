@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Vite;
 
-/**
- * One entry of Vite's `manifest.json`: a chunk, a stylesheet or a plain asset.
- */
 final readonly class Chunk
 {
     /**
-     * @param list<string> $imports the manifest keys of the chunks this one imports statically
-     * @param list<string> $css the stylesheets this chunk imports, as built files
+     * `imports` are manifest keys, `css` built files.
+     *
+     * @param list<string> $imports
+     * @param list<string> $css
      */
     public function __construct(
         public string $name,
