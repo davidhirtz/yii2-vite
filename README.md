@@ -73,7 +73,7 @@ The bundle registers the `vite` component, so a project configures only what dif
         'baseUrl' => '@web/dist',
         'basePath' => '@root/web/dist', // `build.outDir`, read for stylesheets to inline
         'manifestPath' => '@root/web/dist/.vite/manifest.json',
-        'useDevServer' => YII_ENV_DEV,
+        'useDevServer' => YII_ENV_DEV || YII_ENV === 'local',
         'checkDevServer' => true,
         'devServerUrl' => 'http://localhost:5173',
         'devServerInternalUrl' => null, // where PHP reaches the dev server, if not at `devServerUrl`

@@ -35,7 +35,7 @@ class Vite extends Component
 
     public string $manifestPath = '@root/web/dist/.vite/manifest.json';
 
-    public bool $useDevServer = YII_ENV_DEV;
+    public bool $useDevServer = YII_ENV_DEV || YII_ENV === 'local';
 
     /**
      * Without the check, a page loads nothing while the dev server is down.
