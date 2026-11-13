@@ -1,4 +1,4 @@
-## Unreleased
+## 3.5.0 (November 13, 2026)
 
 - Changed the default of `$useDevServer` to include `YII_ENV=local`
 
